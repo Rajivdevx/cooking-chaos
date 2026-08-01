@@ -1,4 +1,4 @@
-import { useState, useEffect, MouseEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { audioManager } from './game/AudioManager';
 import './index.css';
 
@@ -42,7 +42,7 @@ const MainMenu = ({ onPlay }: { onPlay: (mode: 'challenge' | 'endless', difficul
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  const handleSpawnFood = (e: MouseEvent) => {
+  const handleSpawnFood = (e: React.MouseEvent) => {
     // Don't spawn if clicking on a button or panel
     if ((e.target as HTMLElement).closest('.btn') || (e.target as HTMLElement).closest('.hud-panel')) {
       return;
@@ -229,7 +229,7 @@ function App() {
 
   useEffect(() => {
     // Global click listener for button sounds
-    const handleGlobalClick = (e: MouseEvent) => {
+    const handleGlobalClick = (e: globalThis.MouseEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName.toLowerCase() === 'button' || target.closest('button') || target.classList.contains('btn')) {
         audioManager.playClick();

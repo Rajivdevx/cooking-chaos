@@ -1,6 +1,5 @@
 export class AudioManager {
   private ctx: AudioContext | null = null;
-  private sizzleNode: OscillatorNode | null = null;
   private sizzleGain: GainNode | null = null;
   public bgmVolume: number = 0.5;
   public sfxVolume: number = 0.8;
@@ -102,27 +101,29 @@ export class AudioManager {
   }
   
   public playEat() {
-    if (!this.ctx || !this.noiseBuffer) return;
+    const ctx = this.ctx;
+    const noiseBuffer = this.noiseBuffer;
+    if (!ctx || !noiseBuffer) return;
     
     // Quick double crunch
     const playCrunch = (timeOffset: number) => {
-      const noiseSrc = this.ctx.createBufferSource();
-      noiseSrc.buffer = this.noiseBuffer!;
+      const noiseSrc = ctx.createBufferSource();
+      noiseSrc.buffer = noiseBuffer;
       
-      const filter = this.ctx.createBiquadFilter();
+      const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.value = 800;
 
-      const gain = this.ctx.createGain();
-      gain.gain.setValueAtTime(1 * this.sfxVolume, this.ctx.currentTime + timeOffset);
-      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + timeOffset + 0.15);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(1 * this.sfxVolume, ctx.currentTime + timeOffset);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + timeOffset + 0.15);
 
       noiseSrc.connect(filter);
       filter.connect(gain);
-      gain.connect(this.ctx!.destination);
+      gain.connect(ctx.destination);
       
-      noiseSrc.start(this.ctx!.currentTime + timeOffset);
-      noiseSrc.stop(this.ctx!.currentTime + timeOffset + 0.15);
+      noiseSrc.start(ctx.currentTime + timeOffset);
+      noiseSrc.stop(ctx.currentTime + timeOffset + 0.15);
     };
 
     playCrunch(0);

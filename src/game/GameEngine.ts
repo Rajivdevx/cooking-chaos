@@ -72,6 +72,7 @@ export class GameEngine {
         speed: 200,
         direction: { x: 0, y: 1 },
         item: null,
+        isMoving: false,
       },
       counters: this.initializeCounters(),
       orders: [],
